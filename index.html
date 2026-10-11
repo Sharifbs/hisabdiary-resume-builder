@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HisabDiary Resume Builder</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#2563eb">
+  <link rel="apple-touch-icon" href="icons/icon-192.png">
+  
+  <!-- Font Awesome & Google Fonts -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- html2pdf.js CDN -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+</head>
+<body>
+
+  <!-- Navigation Bar -->
+  <nav class="navbar">
+    <div class="logo">
+      <i class="fa-solid fa-file-invoice"></i> HisabDiary <span>Resume Builder</span>
+    </div>
+    <ul class="nav-links">
+      <li><a href="#" class="nav-item active" onclick="showSection('home')">Home</a></li>
+      <li><a href="#" class="nav-item" onclick="showSection('resume')">Resume Builder</a></li>
+      <li><a href="#" class="nav-item" onclick="showSection('contact')">Contact</a></li>
+      <li id="admin-nav-item" style="display: none;"><a href="#" class="nav-item" onclick="showSection('admin')">Admin Panel</a></li>
+    </ul>
+    <div class="user-auth-status">
+      <span id="user-display" class="user-name">Guest</span>
+      <button id="auth-btn" class="btn-auth" onclick="toggleAuthModal()">Login / Signup</button>
+      <button id="install-btn" class="btn-install"><i class="fa-solid fa-download"></i> Install App</button>
+    </div>
+  </nav>
+
+  <!-- HOME SECTION -->
+  <section id="home" class="page-section active">
+    <div class="hero-container">
+      <div class="hero-text">
+        <h1>Create Professional & ATS-Friendly Resumes</h1>
+        <p>Build, customize, save, and download A4 PDF resumes with multi-model templates, Bangla & English font support, and dynamic section controls.</p>
+        <div class="hero-buttons">
+          <button class="btn-hero-primary" onclick="showSection('resume')"><i class="fa-solid fa-pen-to-square"></i> Build Resume Now</button>
+          <button class="btn-hero-secondary" onclick="showSection('contact')"><i class="fa-brands fa-whatsapp"></i> Get WhatsApp Support</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- RESUME BUILDER SECTION -->
+  <section id="resume" class="page-section">
+    <!-- Top Toolbar -->
+    <div class="resume-topbar">
+      <div class="selector-group">
+        <label><i class="fa-solid fa-palette"></i> Template:</label>
+        <select id="templateSelect" onchange="changeTemplate(this.value)">
+          <option value="model-1">Model 01 - ATS Classic</option>
+          <option value="model-2">Model 02 - Modern Blue</option>
+          <option value="model-3">Model 03 - Dark Sidebar Minimal</option>
+          <option value="model-4">Model 04 - Executive Finance</option>
+          <option value="model-5">Model 05 - Fresher / Student</option>
+          <option value="model-6">Model 06 - Creative Professional</option>
+        </select>
+        
+        <label><i class="fa-solid fa-droplet"></i> Accent:</label>
+        <input type="color" id="themeColor" value="#2563eb" onchange="changeThemeColor(this.value)">
+      </div>
+
+      <div class="actions">
+        <button onclick="clearForm()" class="btn-danger"><i class="fa-solid fa-trash"></i> Clear</button>
+        <button onclick="window.print()" class="btn-secondary"><i class="fa-solid fa-print"></i> Print</button>
+        <button onclick="saveResumeData()" class="btn-save"><i class="fa-solid fa-floppy-disk"></i> Save</button>
+        <button onclick="downloadPDF()" class="btn-primary"><i class="fa-solid fa-file-pdf"></i> Download PDF</button>
+      </div>
+    </div>
+
+    <div class="container">
+      <!-- Left Panel: CV Editor -->
+      <div class="form-section">
+        
+        <!-- Photo Upload -->
+        <div class="form-group">
+          <h2><i class="fa-solid fa-image"></i> Profile Photo</h2>
+          <div class="photo-upload-box">
+            <input type="file" id="photoInput" accept="image/*" onchange="handlePhotoUpload(event)">
+            <button onclick="removePhoto()" class="btn-small-danger"><i class="fa-solid fa-xmark"></i> Remove Photo</button>
+          </div>
+        </div>
+
+        <!-- Personal & Contact Details -->
+        <div class="form-group">
+          <h2><i class="fa-solid fa-user"></i> Personal & Contact Details</h2>
+          <input type="text" id="nameInput" placeholder="Full Name" oninput="updateField('pv-name', this.value, 'Your Full Name')">
+          <input type="text" id="titleInput" placeholder="Professional Title (e.g. Accounts Executive)" oninput="updateField('pv-title', this.value, 'Professional Title')">
+          <input type="email" id="emailInput" placeholder="Email Address" oninput="updateField('pv-email', this.value, 'email@example.com')">
+          <input type="text" id="phoneInput" placeholder="Phone Number" oninput="updateField('pv-phone', this.value, '+8801700000000')">
+          <input type="text" id="addressInput" placeholder="Address (City, Country)" oninput="updateField('pv-address', this.value, 'Dhaka, Bangladesh')">
+          <input type="text" id="linkedinInput" placeholder="LinkedIn Profile URL" oninput="updateField('pv-linkedin', this.value, 'linkedin.com/in/username')">
+          <input type="text" id="githubInput" placeholder="GitHub / Portfolio Link" oninput="updateField('pv-github', this.value, 'github.com/username')">
+        </div>
+
+        <!-- Summary -->
+        <div class="form-group">
+          <h2><i class="fa-solid fa-address-card"></i> Professional Summary</h2>
+          <textarea id="summaryInput" placeholder="Write a short summary about your experience and skills..." oninput="updateField('pv-summary', this.value, 'Your professional profile summary will appear here...')"></textarea>
+        </div>
+
+        <!-- Dynamic Work Experience -->
+        <div class="form-group">
+          <div class="section-header-btn">
+            <h2><i class="fa-solid fa-briefcase"></i> Work Experience</h2>
+            <button onclick="addExperienceField()" class="btn-add"><i class="fa-solid fa-plus"></i> Add Job</button>
+          </div>
+          <div id="experience-inputs-container"></div>
+        </div>
+
+        <!-- Dynamic Education -->
+        <div class="form-group">
+          <div class="section-header-btn">
+            <h2><i class="fa-solid fa-graduation-cap"></i> Education</h2>
+            <button onclick="addEducationField()" class="btn-add"><i class="fa-solid fa-plus"></i> Add Degree</button>
+          </div>
+          <div id="education-inputs-container"></div>
+        </div>
+
+        <!-- Skills -->
+        <div class="form-group">
+          <h2><i class="fa-solid fa-code"></i> Skills (Technical & Soft)</h2>
+          <input type="text" id="skillsInput" placeholder="Comma separated (e.g. Accounting, MS Excel, Financial Analysis)" oninput="updateSkills(this.value)">
+        </div>
+
+        <!-- Projects & Achievements -->
+        <div class="form-group">
+          <div class="section-header-btn">
+            <h2><i class="fa-solid fa-diagram-project"></i> Projects & Achievements</h2>
+            <button onclick="addProjectField()" class="btn-add"><i class="fa-solid fa-plus"></i> Add Project</button>
+          </div>
+          <div id="project-inputs-container"></div>
+        </div>
+
+        <!-- Certifications & Languages -->
+        <div class="form-group">
+          <h2><i class="fa-solid fa-certificate"></i> Certifications & Training</h2>
+          <textarea id="certInput" placeholder="Course / Certificate Name, Provider, Year" oninput="updateField('pv-cert', this.value, 'Certifications details...')"></textarea>
+          
+          <h2><i class="fa-solid fa-language"></i> Languages</h2>
+          <input type="text" id="langInput" placeholder="Languages (e.g. Bengali (Native), English (Fluent))" oninput="updateField('pv-lang', this.value, 'Bengali, English')">
+        </div>
+
+      </div>
+
+      <!-- Right Panel: Live Preview Area -->
+      <div class="preview-section">
+        <div id="cv-preview" class="cv-paper model-1">
+          
+          <div class="cv-header-block">
+            <img id="pv-photo" src="" alt="Profile Photo" class="preview-photo" style="display:none;">
+            <div class="header-text-info">
+              <h1 id="pv-name">Your Full Name</h1>
+              <p class="title" id="pv-title">Professional Title</p>
+              <div class="contact-info-grid">
+                <span id="pv-email-wrap"><i class="fa-solid fa-envelope"></i> <span id="pv-email">email@example.com</span></span>
+                <span id="pv-phone-wrap"><i class="fa-solid fa-phone"></i> <span id="pv-phone">+8801700000000</span></span>
+                <span id="pv-address-wrap"><i class="fa-solid fa-location-dot"></i> <span id="pv-address">Dhaka, Bangladesh</span></span>
+                <span id="pv-linkedin-wrap"><i class="fa-brands fa-linkedin"></i> <span id="pv-linkedin">linkedin.com/in/username</span></span>
+                <span id="pv-github-wrap"><i class="fa-brands fa-github"></i> <span id="pv-github">github.com/username</span></span>
+              </div>
+            </div>
+          </div>
+
+          <hr class="cv-divider">
+
+          <div class="cv-body-block">
+            <div class="cv-sec" id="sec-summary">
+              <h3><i class="fa-solid fa-user-tie"></i> Executive Summary</h3>
+              <p id="pv-summary">Your professional profile summary will appear here...</p>
+            </div>
+
+            <div class="cv-sec" id="sec-exp">
+              <h3><i class="fa-solid fa-briefcase"></i> Work Experience</h3>
+              <div id="pv-exp-list"></div>
+            </div>
+
+            <div class="cv-sec" id="sec-edu">
+              <h3><i class="fa-solid fa-graduation-cap"></i> Education</h3>
+              <div id="pv-edu-list"></div>
+            </div>
+
+            <div class="cv-sec" id="sec-skills">
+              <h3><i class="fa-solid fa-gears"></i> Key Skills</h3>
+              <div id="pv-skills-list" class="skills-tag-container"></div>
+            </div>
+
+            <div class="cv-sec" id="sec-proj">
+              <h3><i class="fa-solid fa-diagram-project"></i> Projects & Key Achievements</h3>
+              <div id="pv-proj-list"></div>
+            </div>
+
+            <div class="cv-sec" id="sec-cert">
+              <h3><i class="fa-solid fa-certificate"></i> Certifications</h3>
+              <p id="pv-cert">Certifications details...</p>
+            </div>
+
+            <div class="cv-sec" id="sec-lang">
+              <h3><i class="fa-solid fa-language"></i> Languages</h3>
+              <p id="pv-lang">Bengali, English</p>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT SECTION -->
+  <section id="contact" class="page-section">
+    <div class="contact-card">
+      <div class="contact-icon"><i class="fa-brands fa-whatsapp"></i></div>
+      <h2>HisabDiary Support & Service</h2>
+      <p>Have issues with CV building or need specialized accounts/resume customization?</p>
+      <a href="https://wa.me/8801716247713?text=Hi,%20I%20need%20help%20with%20HisabDiary%20Resume%20Builder" target="_blank" class="whatsapp-btn">
+        <i class="fa-brands fa-whatsapp"></i> Chat on WhatsApp (01716247713)
+      </a>
+    </div>
+  </section>
+
+  <!-- ADMIN DASHBOARD SECTION -->
+  <section id="admin" class="page-section">
+    <div class="admin-container">
+      <h2><i class="fa-solid fa-user-shield"></i> Admin Control Center</h2>
+      <div class="admin-stats">
+        <div class="stat-card"><h3 id="stat-users">0</h3><p>Registered Users</p></div>
+        <div class="stat-card"><h3 id="stat-cvs">0</h3><p>Saved Resumes</p></div>
+      </div>
+
+      <!-- Change Admin Password Card -->
+      <div class="admin-pass-box">
+        <h3><i class="fa-solid fa-key"></i> Change Admin Password</h3>
+        <div class="admin-pass-form">
+          <input type="password" id="newAdminPass" placeholder="Enter New Admin Password">
+          <button onclick="changeAdminPassword()" class="btn-primary"><i class="fa-solid fa-floppy-disk"></i> Update Password</button>
+        </div>
+      </div>
+
+      <!-- Add New User Card -->
+      <div class="admin-pass-box">
+        <h3><i class="fa-solid fa-user-plus"></i> Add New User</h3>
+        <div class="admin-pass-form" style="flex-wrap: wrap;">
+          <input type="text" id="adminAddName" placeholder="Full Name" style="flex:1; min-width: 150px;">
+          <input type="email" id="adminAddEmail" placeholder="Email Address" style="flex:1; min-width: 150px;">
+          <input type="password" id="adminAddPass" placeholder="Password" style="flex:1; min-width: 150px;">
+          <button onclick="adminAddNewUser()" class="btn-primary"><i class="fa-solid fa-plus"></i> Add User</button>
+        </div>
+      </div>
+
+      <h3>User Database & Contacts</h3>
+      <table class="admin-table">
+        <thead>
+          <tr><th>Name</th><th>Email</th><th>Role</th><th>Actions</th></tr>
+        </thead>
+        <tbody id="admin-user-table"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- PREMIUM AUTH MODAL -->
+  <div id="auth-modal" class="modal">
+    <div class="modal-card">
+      <button class="close-modal-btn" onclick="toggleAuthModal()">&times;</button>
+      
+      <div class="modal-header">
+        <div class="modal-badge"><i class="fa-solid fa-user-check"></i></div>
+        <h2 id="modal-title">Welcome Back</h2>
+        <p id="modal-subtitle">Sign in to save and edit your resumes anytime</p>
+      </div>
+
+      <form id="auth-form" onsubmit="handleAuth(event)">
+        <div class="input-field-group" id="name-group" style="display:none;">
+          <i class="fa-solid fa-user input-icon"></i>
+          <input type="text" id="auth-name" placeholder="Full Name">
+        </div>
+
+        <div class="input-field-group">
+          <i class="fa-solid fa-envelope input-icon"></i>
+          <input type="email" id="auth-email" placeholder="Email Address" required>
+        </div>
+
+        <div class="input-field-group">
+          <i class="fa-solid fa-lock input-icon"></i>
+          <input type="password" id="auth-password" placeholder="Password" required>
+        </div>
+
+        <div class="forgot-pass-link" id="forgot-pass-wrapper">
+          <a href="#" onclick="switchAuthMode('forgot')">Forgot Password?</a>
+        </div>
+
+        <button type="submit" class="btn-submit-auth" id="auth-submit-btn">
+          <span>Login</span> <i class="fa-solid fa-arrow-right"></i>
+        </button>
+      </form>
+
+      <div class="modal-footer">
+        <span id="toggle-msg">Don't have an account?</span>
+        <a href="#" onclick="switchAuthMode()" id="toggle-link">Create Account</a>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
