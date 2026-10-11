@@ -6,7 +6,7 @@ let usersDB = JSON.parse(localStorage.getItem('usersDB')) || [
   { name: 'Admin', email: 'admin@hisabdiary.com', pass: adminPassword, role: 'admin' }
 ];
 
-let authMode = 'login'; // 'login' | 'signup' | 'forgot'
+let authMode = 'login'; 
 let photoBase64 = '';
 
 // DOM Initialization
@@ -24,6 +24,12 @@ function showSection(secId) {
   document.querySelectorAll('.nav-links a').forEach(l => l.classList.remove('active'));
   document.getElementById(secId).classList.add('active');
   if (secId === 'admin') loadAdminDashboard();
+}
+
+function selectTemplateFromHero(modelId) {
+  document.getElementById('templateSelect').value = modelId;
+  changeTemplate(modelId);
+  showSection('resume');
 }
 
 // Field Updater Helper
@@ -304,7 +310,6 @@ function switchAuthMode(mode) {
     toggleMsg.innerText = 'Remembered your password?';
     toggleLink.innerText = 'Login';
   } else {
-    // Login
     authMode = 'login';
     title.innerText = 'Welcome Back';
     subtitle.innerText = 'Sign in to save and edit your resumes anytime';
@@ -324,7 +329,6 @@ function handleAuth(e) {
   const name = document.getElementById('auth-name').value.trim();
 
   if (authMode === 'forgot') {
-    // Reset Password
     if (email === 'admin@hisabdiary.com') {
       adminPassword = pass;
       localStorage.setItem('adminPassword', adminPassword);
@@ -343,7 +347,6 @@ function handleAuth(e) {
     return;
   }
 
-  // Admin Verification
   if (email === 'admin@hisabdiary.com' && pass === adminPassword) {
     currentUser = { name: 'Admin', email: 'admin@hisabdiary.com', role: 'admin' };
   } else if (authMode === 'signup') {

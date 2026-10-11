@@ -38,14 +38,64 @@
 
   <!-- HOME SECTION -->
   <section id="home" class="page-section active">
-    <div class="hero-container">
-      <div class="hero-text">
+    <div class="hero-wrapper">
+      <div class="hero-text-side">
+        <span class="hero-tag"><i class="fa-solid fa-sparkles"></i> 100% Free & ATS-Ready CV Maker</span>
         <h1>Create Professional & ATS-Friendly Resumes</h1>
         <p>Build, customize, save, and download A4 PDF resumes with multi-model templates, Bangla & English font support, and dynamic section controls.</p>
         <div class="hero-buttons">
           <button class="btn-hero-primary" onclick="showSection('resume')"><i class="fa-solid fa-pen-to-square"></i> Build Resume Now</button>
-          <button class="btn-hero-secondary" onclick="showSection('contact')"><i class="fa-brands fa-whatsapp"></i> Get WhatsApp Support</button>
+          <button class="btn-hero-secondary" onclick="showSection('contact')"><i class="fa-brands fa-whatsapp"></i> Get Support</button>
         </div>
+      </div>
+
+      <!-- Right Side Live Interactive Resume Mockups -->
+      <div class="hero-mockup-side">
+        <div class="resume-card-preview card-stacked-back" onclick="selectTemplateFromHero('model-2')">
+          <div class="mock-line header-line"></div>
+          <div class="mock-line title-line"></div>
+          <div class="mock-block"></div>
+          <div class="mock-block"></div>
+          <span class="mock-badge">Model 02</span>
+        </div>
+
+        <div class="resume-card-preview card-stacked-front" onclick="selectTemplateFromHero('model-1')">
+          <div class="mock-header">
+            <div class="mock-avatar"></div>
+            <div>
+              <div class="mock-name">SHARIFUL ISLAM</div>
+              <div class="mock-sub">Senior Accounts Manager</div>
+            </div>
+          </div>
+          <div class="mock-divider"></div>
+          <div class="mock-section-title">PROFESSIONAL SUMMARY</div>
+          <div class="mock-text">Experienced Accounts Executive with 5+ years expertise in financial modeling, tax audit, and software implementation.</div>
+          
+          <div class="mock-section-title" style="margin-top: 10px;">WORK EXPERIENCE</div>
+          <div class="mock-text-bold">Manager - HisabDiary Solutions</div>
+          <div class="mock-text">• Managed financial reporting and accounts ledger.</div>
+          <div class="mock-text">• Reduced audit processing time by 30%.</div>
+          <span class="mock-badge-front">Model 01 (ATS Ready)</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Feature Showcase Section -->
+    <div class="features-showcase">
+      <div class="feature-card">
+        <i class="fa-solid fa-shield-halved feat-icon"></i>
+        <h3>ATS-Optimized Layouts</h3>
+        <p>Standard clean designs that pass HR automated resume screening systems.</p>
+      </div>
+      <div class="feature-card">
+        <i class="fa-solid fa-cloud-arrow-down feat-icon"></i>
+        <h3>Save & Edit Anytime</h3>
+        <p>Create an account to securely store your data and update your CV whenever needed.</p>
+      </div>
+      <div class="feature-card">
+        <i class="fa-solid fa-file-pdf feat-icon"></i>
+        <h3>Instant A4 PDF Export</h3>
+        <p>Download selectable-text, high-quality A4 PDF files with a single click.</p>
       </div>
     </div>
   </section>
@@ -219,7 +269,7 @@
   <section id="contact" class="page-section">
     <div class="contact-card">
       <div class="contact-icon"><i class="fa-brands fa-whatsapp"></i></div>
-      <h2>HisabDiary Support & Service</h2>
+      `<h2>HisabDiary Support & Service</h2>`
       <p>Have issues with CV building or need specialized accounts/resume customization?</p>
       <a href="https://wa.me/8801716247713?text=Hi,%20I%20need%20help%20with%20HisabDiary%20Resume%20Builder" target="_blank" class="whatsapp-btn">
         <i class="fa-brands fa-whatsapp"></i> Chat on WhatsApp (01716247713)
