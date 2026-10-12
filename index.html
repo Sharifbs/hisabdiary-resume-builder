@@ -23,14 +23,21 @@
     <div class="logo">
       <i class="fa-solid fa-file-invoice"></i> HisabDiary <span>Resume Builder</span>
     </div>
-    <ul class="nav-links">
+    
+    <!-- Mobile Hamburger Toggle -->
+    <button class="mobile-menu-btn" onclick="toggleMobileMenu()">
+      <i class="fa-solid fa-bars"></i>
+    </button>
+
+    <ul class="nav-links" id="nav-links">
       <li><a href="#" class="nav-item active" onclick="showSection('home')">Home</a></li>
       <li><a href="#" class="nav-item" onclick="showSection('resume')">Resume Builder</a></li>
       <li><a href="#" class="nav-item" onclick="showSection('jobs')"><i class="fa-solid fa-briefcase"></i> Jobs</a></li>
       <li><a href="#" class="nav-item" onclick="showSection('contact')">Contact</a></li>
       <li id="admin-nav-item" style="display: none;"><a href="#" class="nav-item" onclick="showSection('admin')">Admin Panel</a></li>
     </ul>
-    <div class="user-auth-status">
+
+    <div class="user-auth-status" id="user-auth-status">
       <span id="user-display" class="user-name">Guest</span>
       <button id="auth-btn" class="btn-auth" onclick="toggleAuthModal()">Login / Signup</button>
       <button id="install-btn" class="btn-install"><i class="fa-solid fa-download"></i> Install App</button>
@@ -364,7 +371,7 @@
         <hr style="margin: 10px 0; border: 0; border-top: 1px solid #e2e8f0;">
         <div id="job-modal-desc" style="white-space: pre-line; line-height: 1.5; color:#1e293b;"></div>
       </div>
-      <button onclick="applyJobWithBuilder()" class="btn-hero-primary" style="width:100%;"><i class="fa-solid fa-file-invoice"></i> Build Resume & Apply</button>
+      <button onclick="applyJobWithBuilder()" class="btn-hero-primary" style="width:100%;"><i class="fa-solid fa-check-circle"></i> Apply for Job</button>
     </div>
   </div>
 

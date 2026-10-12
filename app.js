@@ -39,11 +39,22 @@ window.addEventListener('DOMContentLoaded', () => {
   registerPWA();
 });
 
+// Mobile Navbar Toggle
+function toggleMobileMenu() {
+  const nav = document.getElementById('nav-links');
+  nav.classList.toggle('active');
+}
+
 // Single Page Routing
 function showSection(secId) {
   document.querySelectorAll('.page-section').forEach(s => s.classList.remove('active'));
   document.querySelectorAll('.nav-links a').forEach(l => l.classList.remove('active'));
   document.getElementById(secId).classList.add('active');
+  
+  // Auto-close mobile menu after click
+  const nav = document.getElementById('nav-links');
+  if (nav) nav.classList.remove('active');
+
   if (secId === 'admin') loadAdminDashboard();
   if (secId === 'jobs') loadJobs();
 }
@@ -97,6 +108,7 @@ function toggleJobModal() {
 
 function applyJobWithBuilder() {
   toggleJobModal();
+  alert(`Applied Successfully!\nYour application for "${activeJob ? activeJob.title : 'Job'}" has been submitted.`);
   showSection('resume');
 }
 
