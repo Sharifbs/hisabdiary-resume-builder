@@ -123,7 +123,6 @@ function applyJobWithBuilder() {
   const applicantEmail = currentUser ? currentUser.email : 'applicant@example.com';
   const targetEmail = activeJob.companyEmail || 'hr@company.com';
 
-  // Record Application in Database for Admin Panel
   jobApplicationsDB.push({
     id: Date.now(),
     applicantName,
@@ -136,7 +135,6 @@ function applyJobWithBuilder() {
 
   toggleJobModal();
 
-  // Create Email Mailto Link
   const subject = encodeURIComponent(`Application for ${activeJob.title} - ${applicantName}`);
   const body = encodeURIComponent(`Dear HR Team,\n\nI am applying for the post of "${activeJob.title}" at "${activeJob.company}". Please find my attached resume.\n\nApplicant Details:\nName: ${applicantName}\nEmail: ${applicantEmail}\n\nThank you,\n${applicantName}`);
 
@@ -599,7 +597,6 @@ function loadAdminDashboard() {
   document.getElementById('stat-jobs').innerText = jobsDB.length;
   document.getElementById('stat-apps').innerText = jobApplicationsDB.length;
 
-  // Render Job Applications Received Table
   const aBody = document.getElementById('admin-apps-table');
   if (aBody) {
     aBody.innerHTML = '';
@@ -616,7 +613,6 @@ function loadAdminDashboard() {
     });
   }
 
-  // Render Jobs Table
   const jBody = document.getElementById('admin-jobs-table');
   if (jBody) {
     jBody.innerHTML = '';
@@ -633,7 +629,6 @@ function loadAdminDashboard() {
     });
   }
 
-  // Render Users Table
   const tbody = document.getElementById('admin-user-table');
   tbody.innerHTML = '';
   usersDB.forEach(u => {
