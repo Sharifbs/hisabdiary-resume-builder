@@ -18,7 +18,7 @@ body {
 .navbar {
   background-color: #1e3a8a;
   color: white;
-  padding: 0.8rem 1.5rem;
+  padding: 0.8rem 1.2rem;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -26,15 +26,16 @@ body {
   top: 0;
   z-index: 100;
   box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
 }
 
 .navbar .logo { 
-  font-size: 1.2rem; 
+  font-size: 1.1rem; 
   font-weight: 700; 
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
+  white-space: nowrap;
 }
 .navbar .logo span { color: #38bdf8; }
 
@@ -52,9 +53,9 @@ body {
 .nav-links a { color: #cbd5e1; text-decoration: none; font-weight: 500; }
 .nav-links a:hover, .nav-links a.active { color: #38bdf8; }
 
-.user-auth-status { display: flex; align-items: center; gap: 10px; }
+.user-auth-status { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
 .btn-auth, .btn-install, .btn-primary, .btn-save, .btn-danger, .btn-secondary, .btn-add {
-  padding: 0.5rem 0.9rem; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 0.88rem;
+  padding: 0.45rem 0.8rem; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 0.82rem; white-space: nowrap;
 }
 
 .btn-auth { background: #38bdf8; color: #0f172a; }
@@ -369,11 +370,11 @@ body {
 .modal-footer a { color: #2563eb; font-weight: 600; text-decoration: none; margin-left: 4px; }
 .modal-footer a:hover { text-decoration: underline; }
 
-/* COMPLETE MOBILE RESPONSIVE FIX FOR NAVBAR & HEADER */
+/* PERFECT MOBILE HEADER FIX */
 @media screen and (max-width: 900px) {
   .navbar {
-    padding: 0.8rem 1rem;
-    position: relative;
+    padding: 0.8rem 1rem !important;
+    position: relative !important;
   }
 
   .mobile-menu-btn {
@@ -401,8 +402,7 @@ body {
 
   .user-auth-status {
     display: flex !important;
-    width: auto !important;
-    gap: 8px !important;
+    gap: 6px !important;
   }
 
   .user-name {
