@@ -11,6 +11,7 @@ let jobsDB = JSON.parse(localStorage.getItem('jobsDB')) || [
     id: 1,
     title: 'Senior Accounts Executive',
     company: 'HisabDiary Solutions',
+    companyEmail: 'hr@hisabdiary.com',
     location: 'Dhaka, Bangladesh',
     salary: 'BDT 45,000 - 60,000',
     details: 'Responsible for audit management, tax filing, financial ledger analysis, and client consulting.'
@@ -19,11 +20,14 @@ let jobsDB = JSON.parse(localStorage.getItem('jobsDB')) || [
     id: 2,
     title: 'Frontend Developer (JavaScript / PWA)',
     company: 'TechCorp Solutions',
+    companyEmail: 'careers@techcorp.com',
     location: 'Remote / Dhaka',
     salary: 'BDT 50,000 - 80,000',
     details: 'Seeking a skilled developer proficient in JS, HTML5, CSS3, and Progressive Web Applications.'
   }
 ];
+
+let jobApplicationsDB = JSON.parse(localStorage.getItem('jobApplicationsDB')) || [];
 
 let authMode = 'login'; 
 let photoBase64 = '';
@@ -51,7 +55,6 @@ function showSection(secId) {
   document.querySelectorAll('.nav-links a').forEach(l => l.classList.remove('active'));
   document.getElementById(secId).classList.add('active');
   
-  // Auto-close mobile menu after click
   const nav = document.getElementById('nav-links');
   if (nav) nav.classList.remove('active');
 
@@ -78,6 +81,7 @@ function loadJobs() {
           <h3 style="font-size: 1.15rem; color: #0f172a; margin-bottom: 4px;">${job.title}</h3>
           <p style="color: #2563eb; font-weight: 600; font-size: 0.9rem; margin-bottom: 12px;"><i class="fa-solid fa-building"></i> ${job.company}</p>
           <div style="display: flex; flex-direction: column; gap: 6px; font-size: 0.85rem; color: #475569; margin-bottom: 15px;">
+            <span><i class="fa-solid fa-envelope"></i> ${job.companyEmail || 'N/A'}</span>
             <span><i class="fa-solid fa-location-dot"></i> ${job.location}</span>
             <span><i class="fa-solid fa-money-bill-wave"></i> ${job.salary}</span>
           </div>
@@ -94,6 +98,7 @@ function openJobDetails(jobId) {
 
   document.getElementById('job-modal-title').innerText = activeJob.title;
   document.getElementById('job-modal-sub').innerText = activeJob.company;
+  document.getElementById('job-modal-email').innerText = activeJob.companyEmail || 'hr@company.com';
   document.getElementById('job-modal-loc').innerText = activeJob.location;
   document.getElementById('job-modal-sal').innerText = activeJob.salary;
   document.getElementById('job-modal-desc').innerText = activeJob.details;
@@ -107,23 +112,56 @@ function toggleJobModal() {
 }
 
 function applyJobWithBuilder() {
+  if (!currentUser) {
+    alert('Please Login/Signup to apply for jobs!');
+    toggleJobModal();
+    toggleAuthModal();
+    return;
+  }
+
+  const applicantName = currentUser ? currentUser.name : 'Job Applicant';
+  const applicantEmail = currentUser ? currentUser.email : 'applicant@example.com';
+  const targetEmail = activeJob.companyEmail || 'hr@company.com';
+
+  // Record Application in Database for Admin Panel
+  jobApplicationsDB.push({
+    id: Date.now(),
+    applicantName,
+    applicantEmail,
+    jobTitle: activeJob.title,
+    company: activeJob.company,
+    appliedDate: new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })
+  });
+  localStorage.setItem('jobApplicationsDB', JSON.stringify(jobApplicationsDB));
+
   toggleJobModal();
-  alert(`Applied Successfully!\nYour application for "${activeJob ? activeJob.title : 'Job'}" has been submitted.`);
-  showSection('resume');
+
+  // Create Email Mailto Link
+  const subject = encodeURIComponent(`Application for ${activeJob.title} - ${applicantName}`);
+  const body = encodeURIComponent(`Dear HR Team,\n\nI am applying for the post of "${activeJob.title}" at "${activeJob.company}". Please find my attached resume.\n\nApplicant Details:\nName: ${applicantName}\nEmail: ${applicantEmail}\n\nThank you,\n${applicantName}`);
+
+  alert(`Applied Successfully!\nRedirecting to your email client to send CV to ${targetEmail}`);
+  window.location.href = `mailto:${targetEmail}?subject=${subject}&body=${body}`;
 }
 
 function adminAddJob() {
   const title = document.getElementById('jobTitle').value.trim();
   const company = document.getElementById('jobCompany').value.trim();
+  const companyEmail = document.getElementById('jobCompanyEmail').value.trim();
   const location = document.getElementById('jobLocation').value.trim();
   const salary = document.getElementById('jobSalary').value.trim();
   const details = document.getElementById('jobDetails').value.trim();
 
-  if (!title || !company) return alert('Please enter Title and Company Name!');
+  if (!title || !company || !companyEmail) return alert('Please enter Title, Company Name, and Company Email!');
 
   const newJob = {
     id: Date.now(),
-    title, company, location: location || 'N/A', salary: salary || 'Negotiable', details: details || 'No additional details provided.'
+    title,
+    company,
+    companyEmail,
+    location: location || 'N/A',
+    salary: salary || 'Negotiable',
+    details: details || 'No additional details provided.'
   };
 
   jobsDB.push(newJob);
@@ -132,6 +170,7 @@ function adminAddJob() {
 
   document.getElementById('jobTitle').value = '';
   document.getElementById('jobCompany').value = '';
+  document.getElementById('jobCompanyEmail').value = '';
   document.getElementById('jobLocation').value = '';
   document.getElementById('jobSalary').value = '';
   document.getElementById('jobDetails').value = '';
@@ -558,6 +597,24 @@ function adminResetUserPass(email) {
 function loadAdminDashboard() {
   document.getElementById('stat-users').innerText = usersDB.length;
   document.getElementById('stat-jobs').innerText = jobsDB.length;
+  document.getElementById('stat-apps').innerText = jobApplicationsDB.length;
+
+  // Render Job Applications Received Table
+  const aBody = document.getElementById('admin-apps-table');
+  if (aBody) {
+    aBody.innerHTML = '';
+    jobApplicationsDB.forEach(app => {
+      aBody.innerHTML += `
+        <tr>
+          <td>${app.applicantName}</td>
+          <td><a href="mailto:${app.applicantEmail}">${app.applicantEmail}</a></td>
+          <td>${app.jobTitle}</td>
+          <td>${app.company}</td>
+          <td>${app.appliedDate}</td>
+        </tr>
+      `;
+    });
+  }
 
   // Render Jobs Table
   const jBody = document.getElementById('admin-jobs-table');
@@ -568,6 +625,7 @@ function loadAdminDashboard() {
         <tr>
           <td>${j.title}</td>
           <td>${j.company}</td>
+          <td>${j.companyEmail || 'N/A'}</td>
           <td>${j.location}</td>
           <td><span class="btn-action-del" onclick="adminDeleteJob(${j.id})">Delete</span></td>
         </tr>
