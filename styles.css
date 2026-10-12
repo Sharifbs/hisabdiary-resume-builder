@@ -379,7 +379,7 @@ body {
   }
 
   .navbar .logo {
-    font-size: 0.95rem !important;
+    font-size: 1rem !important;
   }
 
   .mobile-menu-btn {
@@ -434,16 +434,6 @@ body {
     height: 300px !important; 
     width: 100% !important;
     overflow: hidden !important;
-  }
-}
-
-@media screen and (max-width: 360px) {
-  .navbar .logo {
-    font-size: 0.82rem !important;
-  }
-  .btn-auth, .btn-install {
-    padding: 0.35rem 0.5rem !important;
-    font-size: 0.75rem !important;
   }
 }
 
