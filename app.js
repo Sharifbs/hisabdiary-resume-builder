@@ -6,8 +6,28 @@ let usersDB = JSON.parse(localStorage.getItem('usersDB')) || [
   { name: 'Admin', email: 'admin@hisabdiary.com', pass: adminPassword, role: 'admin' }
 ];
 
+let jobsDB = JSON.parse(localStorage.getItem('jobsDB')) || [
+  {
+    id: 1,
+    title: 'Senior Accounts Executive',
+    company: 'HisabDiary Solutions',
+    location: 'Dhaka, Bangladesh',
+    salary: 'BDT 45,000 - 60,000',
+    details: 'Responsible for audit management, tax filing, financial ledger analysis, and client consulting.'
+  },
+  {
+    id: 2,
+    title: 'Frontend Developer (JavaScript / PWA)',
+    company: 'TechCorp Solutions',
+    location: 'Remote / Dhaka',
+    salary: 'BDT 50,000 - 80,000',
+    details: 'Seeking a skilled developer proficient in JS, HTML5, CSS3, and Progressive Web Applications.'
+  }
+];
+
 let authMode = 'login'; 
 let photoBase64 = '';
+let activeJob = null;
 
 // DOM Initialization
 window.addEventListener('DOMContentLoaded', () => {
@@ -15,6 +35,7 @@ window.addEventListener('DOMContentLoaded', () => {
   addExperienceField();
   addEducationField();
   loadSavedResume();
+  loadJobs();
   registerPWA();
 });
 
@@ -24,12 +45,94 @@ function showSection(secId) {
   document.querySelectorAll('.nav-links a').forEach(l => l.classList.remove('active'));
   document.getElementById(secId).classList.add('active');
   if (secId === 'admin') loadAdminDashboard();
+  if (secId === 'jobs') loadJobs();
 }
 
 function selectTemplateFromHero(modelId) {
   document.getElementById('templateSelect').value = modelId;
   changeTemplate(modelId);
   showSection('resume');
+}
+
+// Jobs Functionality
+function loadJobs() {
+  const container = document.getElementById('jobs-list');
+  if (!container) return;
+  container.innerHTML = '';
+
+  jobsDB.forEach(job => {
+    container.innerHTML += `
+      <div style="background: white; border: 1px solid #e2e8f0; border-radius: 12px; padding: 20px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); display: flex; flex-direction: column; justify-content: space-between;">
+        <div>
+          <h3 style="font-size: 1.15rem; color: #0f172a; margin-bottom: 4px;">${job.title}</h3>
+          <p style="color: #2563eb; font-weight: 600; font-size: 0.9rem; margin-bottom: 12px;"><i class="fa-solid fa-building"></i> ${job.company}</p>
+          <div style="display: flex; flex-direction: column; gap: 6px; font-size: 0.85rem; color: #475569; margin-bottom: 15px;">
+            <span><i class="fa-solid fa-location-dot"></i> ${job.location}</span>
+            <span><i class="fa-solid fa-money-bill-wave"></i> ${job.salary}</span>
+          </div>
+        </div>
+        <button style="width: 100%; padding: 8px; background: #eff6ff; color: #2563eb; border: 1px solid #bfdbfe; border-radius: 6px; font-weight: 600; cursor: pointer;" onclick="openJobDetails(${job.id})">View Circular & Apply</button>
+      </div>
+    `;
+  });
+}
+
+function openJobDetails(jobId) {
+  activeJob = jobsDB.find(j => j.id === jobId);
+  if (!activeJob) return;
+
+  document.getElementById('job-modal-title').innerText = activeJob.title;
+  document.getElementById('job-modal-sub').innerText = activeJob.company;
+  document.getElementById('job-modal-loc').innerText = activeJob.location;
+  document.getElementById('job-modal-sal').innerText = activeJob.salary;
+  document.getElementById('job-modal-desc').innerText = activeJob.details;
+
+  toggleJobModal();
+}
+
+function toggleJobModal() {
+  const modal = document.getElementById('job-modal');
+  modal.style.display = modal.style.display === 'flex' ? 'none' : 'flex';
+}
+
+function applyJobWithBuilder() {
+  toggleJobModal();
+  showSection('resume');
+}
+
+function adminAddJob() {
+  const title = document.getElementById('jobTitle').value.trim();
+  const company = document.getElementById('jobCompany').value.trim();
+  const location = document.getElementById('jobLocation').value.trim();
+  const salary = document.getElementById('jobSalary').value.trim();
+  const details = document.getElementById('jobDetails').value.trim();
+
+  if (!title || !company) return alert('Please enter Title and Company Name!');
+
+  const newJob = {
+    id: Date.now(),
+    title, company, location: location || 'N/A', salary: salary || 'Negotiable', details: details || 'No additional details provided.'
+  };
+
+  jobsDB.push(newJob);
+  localStorage.setItem('jobsDB', JSON.stringify(jobsDB));
+  alert('Job Circular Published Successfully!');
+
+  document.getElementById('jobTitle').value = '';
+  document.getElementById('jobCompany').value = '';
+  document.getElementById('jobLocation').value = '';
+  document.getElementById('jobSalary').value = '';
+  document.getElementById('jobDetails').value = '';
+
+  loadAdminDashboard();
+}
+
+function adminDeleteJob(jobId) {
+  if (confirm('Delete this job circular?')) {
+    jobsDB = jobsDB.filter(j => j.id !== jobId);
+    localStorage.setItem('jobsDB', JSON.stringify(jobsDB));
+    loadAdminDashboard();
+  }
 }
 
 // Field Updater Helper
@@ -442,6 +545,25 @@ function adminResetUserPass(email) {
 
 function loadAdminDashboard() {
   document.getElementById('stat-users').innerText = usersDB.length;
+  document.getElementById('stat-jobs').innerText = jobsDB.length;
+
+  // Render Jobs Table
+  const jBody = document.getElementById('admin-jobs-table');
+  if (jBody) {
+    jBody.innerHTML = '';
+    jobsDB.forEach(j => {
+      jBody.innerHTML += `
+        <tr>
+          <td>${j.title}</td>
+          <td>${j.company}</td>
+          <td>${j.location}</td>
+          <td><span class="btn-action-del" onclick="adminDeleteJob(${j.id})">Delete</span></td>
+        </tr>
+      `;
+    });
+  }
+
+  // Render Users Table
   const tbody = document.getElementById('admin-user-table');
   tbody.innerHTML = '';
   usersDB.forEach(u => {

@@ -26,6 +26,7 @@
     <ul class="nav-links">
       <li><a href="#" class="nav-item active" onclick="showSection('home')">Home</a></li>
       <li><a href="#" class="nav-item" onclick="showSection('resume')">Resume Builder</a></li>
+      <li><a href="#" class="nav-item" onclick="showSection('jobs')"><i class="fa-solid fa-briefcase"></i> Jobs</a></li>
       <li><a href="#" class="nav-item" onclick="showSection('contact')">Contact</a></li>
       <li id="admin-nav-item" style="display: none;"><a href="#" class="nav-item" onclick="showSection('admin')">Admin Panel</a></li>
     </ul>
@@ -45,7 +46,7 @@
         <p>Build, customize, save, and download A4 PDF resumes with multi-model templates, Bangla & English font support, and dynamic section controls.</p>
         <div class="hero-buttons">
           <button class="btn-hero-primary" onclick="showSection('resume')"><i class="fa-solid fa-pen-to-square"></i> Build Resume Now</button>
-          <button class="btn-hero-secondary" onclick="showSection('contact')"><i class="fa-brands fa-whatsapp"></i> Get Support</button>
+          <button class="btn-hero-secondary" onclick="showSection('jobs')"><i class="fa-solid fa-briefcase"></i> Browse Jobs</button>
         </div>
       </div>
 
@@ -265,11 +266,22 @@
     </div>
   </section>
 
+  <!-- JOBS CIRCULAR SECTION -->
+  <section id="jobs" class="page-section">
+    <div style="max-width: 1100px; margin: 20px auto;">
+      <div style="text-align: center; margin-bottom: 30px;">
+        <h2 style="font-size: 2rem; color: #1e3a8a;"><i class="fa-solid fa-briefcase"></i> Latest Job Circulars</h2>
+        <p style="color: #64748b;">Explore hot job openings and prepare your ATS resume instantly</p>
+      </div>
+      <div id="jobs-list" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 20px;"></div>
+    </div>
+  </section>
+
   <!-- CONTACT SECTION -->
   <section id="contact" class="page-section">
     <div class="contact-card">
       <div class="contact-icon"><i class="fa-brands fa-whatsapp"></i></div>
-      `<h2>HisabDiary Support & Service</h2>`
+      <h2>HisabDiary Support & Service</h2>
       <p>Have issues with CV building or need specialized accounts/resume customization?</p>
       <a href="https://wa.me/8801716247713?text=Hi,%20I%20need%20help%20with%20HisabDiary%20Resume%20Builder" target="_blank" class="whatsapp-btn">
         <i class="fa-brands fa-whatsapp"></i> Chat on WhatsApp (01716247713)
@@ -284,6 +296,20 @@
       <div class="admin-stats">
         <div class="stat-card"><h3 id="stat-users">0</h3><p>Registered Users</p></div>
         <div class="stat-card"><h3 id="stat-cvs">0</h3><p>Saved Resumes</p></div>
+        <div class="stat-card"><h3 id="stat-jobs">0</h3><p>Active Job Posts</p></div>
+      </div>
+
+      <!-- Add Job Circular Card -->
+      <div class="admin-pass-box">
+        <h3><i class="fa-solid fa-plus-circle"></i> Post New Job Circular</h3>
+        <div class="admin-pass-form" style="flex-direction: column;">
+          <input type="text" id="jobTitle" placeholder="Job Title (e.g. Senior Accountant)">
+          <input type="text" id="jobCompany" placeholder="Company Name (e.g. HisabDiary Ltd)">
+          <input type="text" id="jobLocation" placeholder="Location (e.g. Dhaka / Remote)">
+          <input type="text" id="jobSalary" placeholder="Salary Range (e.g. BDT 40,000 - 60,000)">
+          <textarea id="jobDetails" placeholder="Job details, requirements, responsibilities..." style="padding:10px; height:80px; border:1px solid #cbd5e1; border-radius:4px;"></textarea>
+          <button onclick="adminAddJob()" class="btn-primary" style="align-self: flex-start; margin-top:5px;"><i class="fa-solid fa-paper-plane"></i> Publish Job</button>
+        </div>
       </div>
 
       <!-- Change Admin Password Card -->
@@ -306,6 +332,14 @@
         </div>
       </div>
 
+      <h3>Manage Job Circulars</h3>
+      <table class="admin-table" style="margin-bottom: 25px;">
+        <thead>
+          <tr><th>Title</th><th>Company</th><th>Location</th><th>Actions</th></tr>
+        </thead>
+        <tbody id="admin-jobs-table"></tbody>
+      </table>
+
       <h3>User Database & Contacts</h3>
       <table class="admin-table">
         <thead>
@@ -315,6 +349,24 @@
       </table>
     </div>
   </section>
+
+  <!-- JOB DETAILS MODAL -->
+  <div id="job-modal" class="modal">
+    <div class="modal-card" style="max-width: 550px;">
+      <button class="close-modal-btn" onclick="toggleJobModal()">&times;</button>
+      <div class="modal-header" style="text-align: left;">
+        <h2 id="job-modal-title">Job Title</h2>
+        <p id="job-modal-sub" style="color:#2563eb; font-weight:600;">Company Name</p>
+      </div>
+      <div style="margin: 15px 0; font-size: 0.9rem; color: #475569;">
+        <p><strong>Location:</strong> <span id="job-modal-loc"></span></p>
+        <p><strong>Salary:</strong> <span id="job-modal-sal"></span></p>
+        <hr style="margin: 10px 0; border: 0; border-top: 1px solid #e2e8f0;">
+        <div id="job-modal-desc" style="white-space: pre-line; line-height: 1.5; color:#1e293b;"></div>
+      </div>
+      <button onclick="applyJobWithBuilder()" class="btn-hero-primary" style="width:100%;"><i class="fa-solid fa-file-invoice"></i> Build Resume & Apply</button>
+    </div>
+  </div>
 
   <!-- PREMIUM AUTH MODAL -->
   <div id="auth-modal" class="modal">
